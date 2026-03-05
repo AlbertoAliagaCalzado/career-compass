@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Bell, Menu, Zap } from 'lucide-react';
+import { LayoutDashboard, Zap } from 'lucide-react';
 
 export default function DashboardLayout() {
   const location = useLocation();
@@ -12,7 +12,7 @@ export default function DashboardLayout() {
     <div className="flex h-screen w-screen bg-blue-50 overflow-hidden">
 
       <aside className="w-64 bg-slate-900 border-r border-gray-200 hidden md:flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
+        <div className="h-16 flex items-center px-6 border-b border-slate-800">
           <div className="flex items-center gap-2 text-blue-600">
             <div className="flex items-center justify-center rounded-xl bg-primary-600 p-2 w-8 h-8">
               <Zap className="w-6 h-6 text-white" />

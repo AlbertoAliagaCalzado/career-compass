@@ -1,7 +1,42 @@
 import { Briefcase, Target, TrendingUp, Users } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export default function DashboardHome() {
+  const statsData = [
+    {
+      label: "Total personas",
+      value: "127",
+      change: "+12 este mes",
+      icon: Users,
+      colorClass: "text-primary-600",
+      bgClass: "bg-slate-200",
+    },
+    {
+      label: "Especialidades",
+      value: "5",
+      change: "Todas activas",
+      icon: Briefcase,
+      colorClass: "text-primary-600",
+      bgClass: "bg-slate-200",
+    },
+    {
+      label: "Competencias activas",
+      value: "70",
+      change: "En 5 especialidades",
+      icon: Target,
+      colorClass: "text-primary-600",
+      bgClass: "bg-slate-200",
+    },
+    {
+      label: "Cumplimiento medio",
+      value: "72%",
+      change: "+4% vs anterior",
+      icon: TrendingUp,
+      colorClass: "text-primary-600",
+      bgClass: "bg-slate-200",
+    },
+  ];
+
   const specialtyData = [
     { name: 'Analista', total: 38 },
     { name: 'Consultor', total: 32 },
@@ -27,66 +62,20 @@ export default function DashboardHome() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex flex-row">
-            <div className="flex-1">
-
-              <h3 className="text-sm font-medium text-gray-500">Total personas</h3>
-              <p className="text-2xl font-bold text-gray-900">127</p>
-              <h4 className="text-sm font-medium text-gray-500">+12 este mes</h4>
-            </div>
-            <div className="p-1">
-              <div className="p-2 rounded-lg bg-slate-200">
-                <Users className="w-6 h-6 text-primary-600" />
+        {statsData.map((stat, index) => (
+          <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-hover hover:shadow-md">
+            <div className="flex flex-row justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-gray-500">{stat.label}</h3>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
+                <h4 className="text-sm font-medium text-gray-400 mt-1">{stat.change}</h4>
+              </div>
+              <div className={`p-2 rounded-lg ${stat.bgClass}`}>
+                <stat.icon className={`w-6 h-6 ${stat.colorClass}`} />
               </div>
             </div>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex flex-row">
-            <div className="flex-1">
-
-              <h3 className="text-sm font-medium text-gray-500">Especialidades</h3>
-              <p className="text-2xl font-bold text-gray-900">5</p>
-              <h4 className="text-sm font-medium text-gray-500">Todas activas</h4>
-            </div>
-            <div className="p-1">
-              <div className="p-2 rounded-lg bg-slate-200">
-                <Briefcase className="w-6 h-6 text-primary-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex flex-row">
-            <div className="flex-1">
-
-              <h3 className="text-sm font-medium text-gray-500">Competencias activas</h3>
-              <p className="text-2xl font-bold text-gray-900">70</p>
-              <h4 className="text-sm font-medium text-gray-500">En 5 especialidades</h4>
-            </div>
-            <div className="p-1">
-              <div className="p-2 rounded-lg bg-slate-200">
-                <Target className="w-6 h-6 text-primary-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex flex-row">
-            <div className="flex-1">
-
-              <h3 className="text-sm font-medium text-gray-500">Cumplimiento medio</h3>
-              <p className="text-2xl font-bold text-gray-900">72%</p>
-              <h4 className="text-sm font-medium text-gray-500">+4% vs anterior</h4>
-            </div>
-            <div className="p-1">
-              <div className="p-2 rounded-lg bg-slate-200">
-                <TrendingUp className="w-6 h-6 text-primary-600" />
-              </div>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -131,12 +120,7 @@ export default function DashboardHome() {
             </ResponsiveContainer>
           </div>
         </div>
-
-      </div>
-
-      <div className="bg-white p-6 rounded-xl shadow-sm border-gray-100 h-64 flex items-center justify-center text-gray-400 border-dashed border-2">
-        Main Content Area (Charts / Data will go here)
       </div>
     </div>
   );
-}
+};
