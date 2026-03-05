@@ -1,74 +1,64 @@
+import { useQuery } from "@tanstack/react-query";
 import { Briefcase, Target, TrendingUp, Users } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Pie, PieChart, ResponsiveContainer, Tooltip, Legend, BarChart, CartesianGrid, XAxis, YAxis, Bar } from "recharts";
+import { dashboardService } from "../api/client";
+
+const iconMap = {
+  "Total personas": Users,
+  "Especialidades": Briefcase,
+  "Competencias activas": Target,
+  "Cumplimiento medio": TrendingUp,
+};
 
 export default function DashboardHome() {
-  const statsData = [
-    {
-      label: "Total personas",
-      value: "127",
-      change: "+12 este mes",
-      icon: Users,
-      colorClass: "text-primary-600",
-      bgClass: "bg-slate-200",
-    },
-    {
-      label: "Especialidades",
-      value: "5",
-      change: "Todas activas",
-      icon: Briefcase,
-      colorClass: "text-primary-600",
-      bgClass: "bg-slate-200",
-    },
-    {
-      label: "Competencias activas",
-      value: "70",
-      change: "En 5 especialidades",
-      icon: Target,
-      colorClass: "text-primary-600",
-      bgClass: "bg-slate-200",
-    },
-    {
-      label: "Cumplimiento medio",
-      value: "72%",
-      change: "+4% vs anterior",
-      icon: TrendingUp,
-      colorClass: "text-primary-600",
-      bgClass: "bg-slate-200",
-    },
-  ];
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-summary'],
+    queryFn: async () => {
+      const res = await dashboardService.getSummary();
+      return res.data.map(s => ({
+        ...s,
+        icon: iconMap[s.label] || Users,
+        colorClass: "text-primary-600",
+        bgClass: "bg-slate-200"
+      }));
+    }
+  });
 
-  const specialtyData = [
-    { name: 'Analista', total: 38 },
-    { name: 'Consultor', total: 32 },
-    { name: 'Consultor Sr.', total: 28 },
-    { name: 'Manager', total: 18 },
-    { name: 'Director', total: 8 },
-    { name: 'Partner', total: 3 },
-  ];
+  const { data: specialtyData, isLoading: specialtyLoading } = useQuery({
+    queryKey: ['specialty-stats'],
+    queryFn: async () => {
+      const res = await dashboardService.getSpecialtyStats();
+      return res.data;
+    }
+  });
 
-  const statusData = [
-    { name: 'Estrategia', value: 40, fill: 'oklch(48.8% 0.243 264.376)' },
-    { name: 'Tecnología', value: 45, fill: 'oklch(59.6% 0.145 163.225)' },
-    { name: 'SAP', value: 28, fill: 'oklch(66.6% 0.179 58.318)' },
-    { name: 'Auditoría', value: 15, fill: 'oklch(57.7% 0.245 27.325)' },
-    { name: 'Riesgos', value: 32, fill: 'oklch(55.8% 0.288 302.321)' },
-  ];
+  const { data: levelData, isLoading: levelsLoading } = useQuery({
+    queryKey: ['level-stats'],
+    queryFn: async () => {
+      const res = await dashboardService.getLevelStats();
+      return res.data;
+    }
+  });
+
+  if (statsLoading || specialtyLoading || levelsLoading) {
+    return <div className="p-8 text-center animate-pulse text-gray-500">Sincronizando datos...</div>;
+  }
 
   return (
     <div className="w-full space-y-6">
-      <div>
+      <header>
         <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="text-gray-500 mt-1">Resumen del framework de carrera profesional</p>
-      </div>
+        <p className="text-gray-500 mt-1">Datos en tiempo real desde el Framework</p>
+      </header>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {statsData.map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-hover hover:shadow-md">
+        {stats?.map((stat, index) => (
+          <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex flex-row justify-between items-start">
               <div className="flex-1">
                 <h3 className="text-sm font-medium text-gray-500">{stat.label}</h3>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                <h4 className="text-sm font-medium text-gray-400 mt-1">{stat.change}</h4>
+                <h4 className="text-sm font-medium text-green-600 mt-1">{stat.change}</h4>
               </div>
               <div className={`p-2 rounded-lg ${stat.bgClass}`}>
                 <stat.icon className={`w-6 h-6 ${stat.colorClass}`} />
@@ -78,32 +68,43 @@ export default function DashboardHome() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 col-span-2">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribución por nivel</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={specialtyData}>
+              <BarChart data={levelData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                />
+                <YAxis
+                  tick={{ fill: '#64748b', fontSize: 12 }}
+                  allowDecimals={false}
+                />
                 <Tooltip
                   cursor={{ fill: '#f8fafc' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
-                <Bar dataKey="total" className="fill-primary-600" radius={[4, 4, 0, 0]} barSize={40} />
+                <Bar
+                  dataKey="total"
+                  fill="var(--color-primary-600)"
+                  radius={[4, 4, 0, 0]}
+                  barSize={40}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="h-96 bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col col-span-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Personas por especialidad</h3>
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full">
+            <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={statusData}
+                  data={specialtyData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -112,15 +113,13 @@ export default function DashboardHome() {
                   dataKey="value"
                   stroke="none"
                 />
-                <Tooltip
-                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-                />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
                 <Legend verticalAlign="bottom" height={36} iconType="circle" />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
-};
+}
