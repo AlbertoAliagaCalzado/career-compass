@@ -17,36 +17,33 @@ git clone <your-repo-url>
 cd career-compass
 ```
 
-### 2. Prepare the environment
-Ensure you have a `.dockerignore` file in the root directory to prevent permission and synchronization issues:
-```text
-db_data
-node_modules
-.git
-.env
-__pycache__
-*.pyc
-```
-
-### 3. Start the services
+### 2. Start the services
 Run the following command from the root directory. Docker will build the images, install dependencies, and start the services:
 
 ```bash
 docker-compose up --build
 ```
 
-### 4. Access the Application
+### 3. Access the Application
 Once the containers are healthy and running:
 * **Frontend:** http://localhost:3000
 * **API Documentation (FastAPI):** http://localhost:8000/docs
 
-## 🐳 Architecture Overview
+## 🏗 Technology Stack & Architecture
 
+### Frontend
+The frontend is built with **React** and **Vite**, focusing on a component-based architecture to ensure reusability and maintainability.
 
+* **Component-Based UI:** The interface is broken down into small, reusable units (e.g., StatCard, EvaluationRow, ProgressBar) to keep the code DRY.
+* **State Management:** Uses **React Query** for efficient server-state synchronization and **React Context API** to manage global filters.
+* **Styling:** Utilizes **Tailwind CSS** for responsive design.
 
-* **db (MySQL 8.0):** Stores all user, competency, and specialty data.
-* **backend (FastAPI):** Handles business logic, data processing, and database interactions.
-* **frontend (React + Vite):** Modern UI for tracking professional development.
+### Backend
+The backend is powered by **FastAPI**, structured to separate concerns and ensure scalability using a Controller-Service pattern.
+
+* **Controller Layer (Routers):** Handles HTTP request validation and routing.
+* **Service Layer:** Houses the core business logic and database orchestration.
+* **Database Layer:** Uses **SQLAlchemy ORM** to interface with MySQL.
 
 ## 🔧 Useful Commands
 
