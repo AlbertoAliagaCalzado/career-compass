@@ -1,0 +1,15 @@
+db_data
+.git
+.env
+.DS_Store
+node_modules
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+.vscode
+.idea
+dist
+build
+.vite
