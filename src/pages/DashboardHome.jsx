@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Briefcase, Target, TrendingUp, Users } from "lucide-react";
 import { Pie, PieChart, ResponsiveContainer, Tooltip, Legend, BarChart, CartesianGrid, XAxis, YAxis, Bar } from "recharts";
@@ -11,6 +12,8 @@ const iconMap = {
 };
 
 export default function DashboardHome() {
+  const [selectedSpecialty, setSelectedSpecialty] = useState("");
+
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['dashboard-summary'],
     queryFn: async () => {
@@ -33,27 +36,40 @@ export default function DashboardHome() {
   });
 
   const { data: levelData, isLoading: levelsLoading } = useQuery({
-    queryKey: ['level-stats'],
-    queryFn: async () => {
-      const res = await dashboardService.getLevelStats();
-      return res.data;
-    }
+    queryKey: ['stats-levels', selectedSpecialty],
+    queryFn: async () => (await dashboardService.getLevels({ specialty_id: selectedSpecialty })).data
   });
 
   const { data: users, isLoading: usersLoading } = useQuery({
-    queryKey: ['users-recent'],
-    queryFn: async () => {
-      const allUsers = (await userService.getAll()).data;
-      console.log(allUsers);
-      return allUsers;
-    }
+    queryKey: ['users-recent', selectedSpecialty],
+    queryFn: () => userService.getAll({ specialty_id: selectedSpecialty })
   });
 
   return (
     <div className="w-full space-y-6">
-      <header>
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="text-gray-500 mt-1">Resumen del framework de carrera profesional</p>
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+          <p className="text-gray-500 mt-1">Resumen del framework de carrera profesional</p>
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <label htmlFor="specialty-filter" className="text-sm font-medium text-gray-700">
+            Filtrar por:
+          </label>
+          <select
+            id="specialty-filter"
+            value={selectedSpecialty}
+            onChange={(e) => setSelectedSpecialty(e.target.value)}
+            className="flex-1 sm:w-64 bg-slate-50 border border-gray-200 text-slate-600 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-3 cursor-pointer"
+          >
+            <option value="">Todas las especialidades</option>
+            {specialtiesData?.map((spec) => (
+              <option key={spec.id} value={spec.id}>
+                {spec.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </header>
 
       <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -147,19 +163,19 @@ export default function DashboardHome() {
         <div className="divide-y divide-gray-50">
           {usersLoading ? (
             <div className="p-6 text-center text-gray-400">Cargando evaluaciones...</div>
-          ) : users?.slice(0, 5).map(user => (
+          ) : users.data?.slice(0, 5).map(user => (
             <div key={user.id} className="p-4 flex flex-col gap-3 hover:bg-gray-50 transition-colors">
               <div className="flex items-center">
                 <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center font-semibold text-slate-600 shrink-0">
                   {user.initials}
                 </div>
-                <div className="ml-4 flex-1">
+                <div className="mx-4">
                   <p className="font-medium text-gray-900">{user.full_name}</p>
                   <p className="text-xs text-gray-500">{user.level?.name || "Sin nivel"}</p>
                 </div>
                 <div className="flex gap-2">
                   {user.specialties.map(spec => (
-                    <span key={spec.id} className="px-2 py-1 text-[10px] rounded-md bg-slate-100 text-slate-600">
+                    <span key={spec.id} className="px-2 py-0.5 text-xs font-bold rounded-full bg-primary-100 text-slate-800">
                       {spec.name}
                     </span>
                   ))}

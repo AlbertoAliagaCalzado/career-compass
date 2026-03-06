@@ -7,16 +7,18 @@ const api = axios.create({
   },
 });
 
+const clean = (obj) => Object.fromEntries(
+  Object.entries(obj || {}).filter(([_, v]) => v != null && v !== "")
+);
+
 export const dashboardService = {
   getSummary: () => api.get('/stats/summary'),
   getSpecialtyStats: () => api.get('/stats/specialties'),
-  getLevelStats: () => api.get('/stats/levels'),
+  getLevels: (params) => api.get('/stats/levels', { params: clean(params) }),
 };
 
 export const userService = {
-  getAll: (specialtyId) => api.get('/users', { 
-    params: { specialty_id: specialtyId } 
-  }),
+  getAll: (params) => api.get('/users', { params: clean(params) }),
 };
 
 export default api;
