@@ -13,7 +13,7 @@ Welcome to the **Career Compass** project. This repository contains a full-stack
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone "https://github.com/AlbertoAliagaCalzado/career-compass"
 cd career-compass
 ```
 
