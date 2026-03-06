@@ -13,4 +13,10 @@ export const dashboardService = {
   getLevelStats: () => api.get('/stats/levels'),
 };
 
+export const userService = {
+  getAll: (specialtyId) => api.get('/users', { 
+    params: { specialty_id: specialtyId } 
+  }),
+};
+
 export default api;
