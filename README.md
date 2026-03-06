@@ -12,28 +12,28 @@ Welcome to the **Career Compass** project. This repository contains a full-stack
 ## 🛠 Setup & Installation
 
 ### 1. Clone the repository
-\`\`\`bash
+```bash
 git clone <your-repo-url>
 cd career-compass
-\`\`\`
+```
 
 ### 2. Prepare the environment
-Ensure you have a \`.dockerignore\` file in the root directory to prevent permission and synchronization issues:
-\`\`\`text
+Ensure you have a `.dockerignore` file in the root directory to prevent permission and synchronization issues:
+```text
 db_data
 node_modules
 .git
 .env
 __pycache__
 *.pyc
-\`\`\`
+```
 
 ### 3. Start the services
 Run the following command from the root directory. Docker will build the images, install dependencies, and start the services:
 
-\`\`\`bash
+```bash
 docker-compose up --build
-\`\`\`
+```
 
 ### 4. Access the Application
 Once the containers are healthy and running:
@@ -52,7 +52,7 @@ Once the containers are healthy and running:
 
 | Task | Command |
 | :--- | :--- |
-| Start everything | \`docker-compose up\` |
-| Stop services | \`docker-compose down\` |
-| Force rebuild | \`docker-compose up --build --force-recreate\` |
-| View backend logs | \`docker logs -f career_compass_api\` |
+| Start everything | `docker-compose up` |
+| Stop services | `docker-compose down` |
+| Force rebuild | `docker-compose up --build --force-recreate` |
+| View backend logs | `docker logs -f career_compass_api` |
