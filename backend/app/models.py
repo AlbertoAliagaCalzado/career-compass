@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -26,6 +26,7 @@ class User(Base):
     level = relationship("Level", back_populates="users")
     
     specialties = relationship("Specialty", secondary=user_specialties, back_populates="users")
+    competencies_association = relationship("UserCompetency", back_populates="user")
     
 class Level(Base):
     __tablename__ = "levels"
@@ -43,3 +44,13 @@ class Competency(Base):
     specialty_id = Column(Integer, ForeignKey("specialties.id"))
     
     specialty = relationship("Specialty", backref="competencies")
+    users_association = relationship("UserCompetency", back_populates="competency")
+
+class UserCompetency(Base):
+    __tablename__ = "user_competencies"
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    competency_id = Column(Integer, ForeignKey("competencies.id"), primary_key=True)
+    percent_completed = Column(Float, default=0.0)
+
+    user = relationship("User", back_populates="competencies_association")
+    competency = relationship("Competency", back_populates="users_association")

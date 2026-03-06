@@ -1,4 +1,5 @@
-SET NAMES 'utf8mb4';
+SET
+    NAMES 'utf8mb4';
 
 CREATE TABLE
     specialties (
@@ -40,6 +41,16 @@ CREATE TABLE
         PRIMARY KEY (user_id, specialty_id),
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (specialty_id) REFERENCES specialties (id) ON DELETE CASCADE
+    );
+
+CREATE TABLE
+    user_competencies (
+        user_id INT,
+        competency_id INT,
+        percent_completed FLOAT,
+        PRIMARY KEY (user_id, competency_id),
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (competency_id) REFERENCES competencies (id) ON DELETE CASCADE
     );
 
 INSERT INTO
@@ -90,8 +101,8 @@ VALUES
         'Active'
     ),
     (
-        'María García',
-        'maria.garcia@example.com',
+        'María Sánchez',
+        'maria.sanchez@example.com',
         2,
         'Active'
     ),
@@ -138,8 +149,8 @@ VALUES
         'Active'
     ),
     (
-        'María Sánchez',
-        'maria.sanchez@example.com',
+        'María García',
+        'maria.garcia@example.com',
         2,
         'Active'
     ),
@@ -239,3 +250,14 @@ VALUES
     (18, 4),
     (19, 3),
     (19, 5);
+
+INSERT INTO
+    user_competencies (user_id, competency_id, percent_completed)
+VALUES
+    (1, 1, 85.0),
+    (1, 3, 25.0),
+    (2, 2, 42.0),
+    (3, 3, 63.0),
+    (3, 5, 95.0),
+    (4, 4, 5.0),
+    (5, 5, 35.0);
