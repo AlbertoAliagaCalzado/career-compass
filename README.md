@@ -1,16 +1,58 @@
-# React + Vite
+# Career Compass API & Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **Career Compass** project. This repository contains a full-stack application orchestrated with Docker, featuring a MySQL database, a FastAPI backend, and a React + Vite frontend.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
+## 🚀 Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
+* Git
 
-## Expanding the ESLint configuration
+## 🛠 Setup & Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1. Clone the repository
+\`\`\`bash
+git clone <your-repo-url>
+cd career-compass
+\`\`\`
+
+### 2. Prepare the environment
+Ensure you have a \`.dockerignore\` file in the root directory to prevent permission and synchronization issues:
+\`\`\`text
+db_data
+node_modules
+.git
+.env
+__pycache__
+*.pyc
+\`\`\`
+
+### 3. Start the services
+Run the following command from the root directory. Docker will build the images, install dependencies, and start the services:
+
+\`\`\`bash
+docker-compose up --build
+\`\`\`
+
+### 4. Access the Application
+Once the containers are healthy and running:
+* **Frontend:** http://localhost:3000
+* **API Documentation (FastAPI):** http://localhost:8000/docs
+
+## 🐳 Architecture Overview
+
+
+
+* **db (MySQL 8.0):** Stores all user, competency, and specialty data.
+* **backend (FastAPI):** Handles business logic, data processing, and database interactions.
+* **frontend (React + Vite):** Modern UI for tracking professional development.
+
+## 🔧 Useful Commands
+
+| Task | Command |
+| :--- | :--- |
+| Start everything | \`docker-compose up\` |
+| Stop services | \`docker-compose down\` |
+| Force rebuild | \`docker-compose up --build --force-recreate\` |
+| View backend logs | \`docker logs -f career_compass_api\` |
